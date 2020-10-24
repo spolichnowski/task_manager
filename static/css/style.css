@@ -22,3 +22,26 @@ body {
 .scroll {
   overflow-y: scroll;
 }
+
+.form {
+  padding: 60px 50px;
+}
+
+.form input {
+  border: 0px;
+  border-bottom: 1px black solid;
+  border-radius: 0;
+}
+
+.form input:focus {
+  box-shadow: 0 0 0;
+  border-bottom: 2px black solid;
+}
+
+.form button {
+  text-align: right;
+}
+
+.bg-bluish {
+  background-color: #2a5682;
+}
