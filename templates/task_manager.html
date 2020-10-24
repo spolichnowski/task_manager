@@ -1,0 +1,118 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="container-fluid h-100">
+  <div class="row h-100">
+    <div class="col-4 p-5 bg-dark h-100">
+      <form action="" method="POST">
+        <h3 class="mb-4 text-light">Add task</h3>
+        <div class="form-group text-light">
+          <label for="disabledTextInput">Title</label>
+          <input
+            type="text"
+            id="title"
+            class="form-control"
+            placeholder="Title"
+            name="title"
+          />
+        </div>
+        <div class="form-group text-light">
+          <select name="category" class="form-control form-control-sm">
+            {% for category in categories  %}
+              <option value={{ category.id }} >{{ category.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group text-light">
+          <label for="disabledTextInput">Description</label>
+          <textarea
+            class="form-control"
+            id="validationTextarea"
+            placeholder="Task description"
+            name="description"
+            rows="10"
+            required
+          ></textarea>
+        </div>
+        <button type="submit" class="btn btn-light">Add Task</button>
+      </form>
+
+       <form action="" method="POST">
+        <h3 class="mb-4 text-light">Add task</h3>
+        <div class="form-group text-light">
+          <label for="disabledTextInput">Category Name</label>
+          <input
+            type="text"
+            id="name"
+            class="form-control"
+            placeholder="Category name"
+            name="category_name"
+          />
+        </div>
+        <button type="submit" class="btn btn-light">Add Category</button>
+      </form>
+    </div>
+    <div class="col-4 pt-5 scroll bg-light">
+      <h3 class="mb-4">To do:</h3>
+      <div class="row mx-auto position-absolute">
+        {% for task in tasks %}
+          {% if task.done == False %}
+            <div class="col-12">
+              <div class="toast opacity-1 mt-2 mx-auto" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                  <strong class="mr-auto">{{ task.title }}</strong>
+                  <div class="toast-body">
+                    <span class="badge badge-pill badge-primary">
+                      {% for category in categories %}
+                        {% if category.id == task.category_id %}
+                          {{ category.name }}
+                        {% endif %}
+                      {% endfor %}
+                    </span>
+                  </div>
+                  <small>{{ task.created.strftime('%Y-%m-%d') }}</small>
+                  <a role="button" href="{{ url_for("delete_task", id=task.id) }}" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </a>
+                </div>
+                <div class="toast-body">
+                 {{ task.description }}
+                </div>
+                <div class="toast-body text-right">
+                  <a role="button" href="{{ url_for("finish_task", id=task.id) }}" class="btn btn-warning pull-right">Edit</a>
+                  <a role="button" href="{{ url_for("finish_task", id=task.id) }}" class="btn btn-success pull-right">Finish</a>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+      <div class="col-4 pt-5 scroll bg-light">
+        <h3 class="mb-4">Done:</h3>
+        <div class="row mx-auto position-absolute">
+        {% for task in tasks %}
+          {% if task.done %}
+            <div class="col-12">
+              <div class="toast opacity-1 mt-2 mx-auto" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                  <strong class="mr-auto">{{ task.title }}</strong>
+                  <small>{{ task.created.strftime('%Y-%m-%d') }}</small>
+                  <a role="button" href="{{ url_for("delete_task", id=task.id) }}" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </a>
+                </div>
+                <div class="toast-body">
+                  {{ task.description }}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
