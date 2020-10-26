@@ -145,9 +145,18 @@ def task_manager():
             new_category = Category(name=name, user_id=user_id)
             db.session.add(new_category)
             db.session.commit()
+
+    stats = {}
+    stats['created'] = len(Task.query.filter_by(user_id=session['id']).all())
+    stats['done'] = len(Task.query.filter_by(
+        user_id=session['id'], done=True).all())
+
     tasks = Task.query.filter_by(user_id=session['id']).all()
     categories = Category.query.filter_by(user_id=session['id']).all()
-    return render_template('task_manager.html', tasks=tasks, categories=categories, session=session)
+
+    date = datetime.date.today()
+    date = date.strftime("%B %d, %Y")
+    return render_template('task_manager.html', tasks=tasks, categories=categories, session=session, date=date, stats=stats)
 
 
 @app.route('/edit_task/<int:id>', methods=['POST', 'GET'])

@@ -1,9 +1,11 @@
 {% extends 'base.html' %} {% block content %}
 
-<div class="container-fluid h-100">
-  <div class="row h-100">
-    <div class="col-4 p-5 bg-dark h-100">
-      <form action="" method="POST">
+
+<div id="task-form" class="jumbotron center-form bg-secondary">
+<button onclick="closeTaskForm()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+  <span aria-hidden="true">&times;</span>
+</button>
+<form action="" method="POST">
         <h3 class="mb-4 text-light">Add task</h3>
         <div class="form-group text-light">
           <label for="disabledTextInput">Title</label>
@@ -38,8 +40,13 @@
           <button type="submit" class="btn btn-light">Add Task</button>
         </div>
       </form>
+</div>
 
-       <form action="" method="POST">
+<div id="category-form" class="jumbotron center-form">
+  <button onclick="closeCategoryForm()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <form action="" method="POST">
         <h3 class="mt-3 mb-4 text-light">Add category</h3>
         <div class="form-group text-light">
           <label for="disabledTextInput">Category Name</label>
@@ -56,21 +63,74 @@
           <button type="submit" class="btn btn-light">Add Category</button>
         </div>
       </form>
-    </div>
-    <div class="col-4 scroll bg-bluish">
-      <div class="row mx-auto position-absolute">
-        <div class="col-12">
-          <div class="toast opacity-1 mx-auto bg-dark text-light mt-5 mb-3" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-body">
-              <h3>TO DO</h3>
-            </div>
+</div>
+
+
+<div class="container-fluid h-100">
+  <div class="row h-100">
+    <div class="col-4 p-5 bg-dark h-100">
+      <h1 class="logo text-center pb-5">Camel</h1>
+      <div class="ml-3 text-light">
+          <div>
+            <h3>Statistics</h3>
           </div>
+      </div>
+      <div class="card radius m-3">
+        <div class="card-body">
+          Tasks created: {{ stats['created'] }} </br>
+          Tasks finished: {{ stats['done'] }}
         </div>
+      </div>
+
+      <div class="ml-3 mt-5 text-light">
+          <div>
+            <h3>Panel</h3>
+          </div>
+      </div>
+
+      <div class="card radius m-3">
+        <div class="d-flex card-body p-0 pl-3 align-items-center justify-content-between">
+          <h5>Add a new task</h5>
+          <button onclick="showTaskForm()" class="btn btn-link">
+            <svg width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-plus-circle-fill text-dark" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+
+      <div class="card radius m-3">
+        <div class="d-flex card-body p-0 pl-3 align-items-center justify-content-between">
+          <h5>Add a new category</h5>
+          <button onclick="showCategoryForm()" class="btn btn-link">
+            <svg width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-plus-circle-fill text-dark" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+   
+    
+    <div class="col-4 scroll">
+    <div class="p-4 row justify-content-between">
+      <div class="">
+        <h2>Tasks for today</h2>
+        <h4>{{ date }}</h4>
+      </div>
+        <button onclick="showTaskForm()" class="btn btn-link">
+          <svg width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-plus-circle-fill text-dark" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+          </svg>
+        </button>
+    </div>
+      <div class="row mx-auto position-absolute">
         {% for task in tasks %}
           {% if task.done == False %}
             <div class="col-12">
-              <div class="toast opacity-1 mt-2 mx-auto" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="toast-header">
+              <div class="toast opacity-1 mt-3 mx-auto radius p-2" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header radius-top">
                   <strong class="mr-auto">{{ task.title }}</strong>
                   <div class="toast-body">
                     <span class="badge badge-pill badge-primary">
@@ -99,20 +159,31 @@
         {% endfor %}
         </div>
     </div>
-      <div class="col-4 scroll bg-bluish">
-        <div class="row mx-auto position-absolute">
-        <div class="col-12">
-          <div class="toast opacity-1 mt-2 mx-auto bg-dark text-light mt-5 mb-3" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-body">
-              <h3>DONE</h3>
-            </div>
+      <div class="col-4 scroll">
+        <div class="d-flex p-4 row justify-content-end">
+            <h3>{{ session['first_name'] }}</h3>
+            <div class="dropdown pl-3">
+              <button class="btn btn-dark dropdown-toggle rounded-circle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ session['first_name'][0] }}
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a href={{url_for("logout")}} class="btn">Logout</a>
+              </div>
           </div>
         </div>
+        
+
+        <div class="p-4 row">
+          <div class="">
+            <h2>Done</h2>
+          </div>
+        </div>
+        <div class="row mx-auto position-absolute">
         {% for task in tasks %}
           {% if task.done %}
             <div class="col-12">
-              <div class="toast opacity-1 mt-2 mx-auto" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="toast-header">
+              <div class="toast opacity-1 mt-3 mx-auto radius p-2" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header radius-top">
                   <strong class="mr-auto">{{ task.title }}</strong>
                   <div class="toast-body">
                     <span class="badge badge-pill badge-primary">
@@ -142,4 +213,32 @@
   </div>
 </div>
 
+
+<script>
+
+function showTaskForm() {
+  document.getElementById("task-form").style.display = "block";
+} 
+
+function closeTaskForm() {
+  document.getElementById("task-form").style.display = "none"
+}
+
+function showCategoryForm() {
+  document.getElementById("category-form").style.display = "block";
+} 
+
+function closeCategoryForm() {
+  document.getElementById("category-form").style.display = "none"
+}
+
+function showEditForm() {
+  document.getElementById("edit-form").style.display = "block";
+} 
+
+function closeEditForm() {
+  document.getElementById("edit-form").style.display = "none"
+}
+
+</script>
 {% endblock %}
