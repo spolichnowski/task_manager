@@ -8,12 +8,15 @@
         <p>Simple app that will help you to keep track of your daily tasks.</p>
         <div class="">
           <a role="button" class="btn btn-primary m-1" href="{{ url_for('task_manager') }}">
-            Start
+            Login
           </a>
-          <a role="button" class="btn btn-warning m-1" href="{{ url_for('index') }}"> About app </a>
+          <a role="button" class="btn btn-warning m-1" href="{{ url_for('register') }}">
+            Register
+          </a>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 {% endblock %}

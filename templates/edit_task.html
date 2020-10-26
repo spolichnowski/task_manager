@@ -1,0 +1,45 @@
+{% extends 'base.html' %} {% block content %}
+
+<form action="" method="POST">
+  <h3 class="mb-4 text-light">Add task</h3>
+  <div class="form-group text-light">
+    <label for="disabledTextInput">Title</label>
+    <input
+      value="{{
+      task.title
+      }}"
+      type="text"
+      id="title"
+      class="form-control"
+      placeholder="Title"
+      name="title"
+    />
+  </div>
+  <div class="form-group text-light">
+    <select name="category" class="form-control form-control-sm">
+      {% for category in categories %}
+      <option value="{{ category.id }}">{{ category.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-group text-light">
+    <label for="disabledTextInput">Description</label>
+    <textarea
+      class="form-control"
+      id="validationTextarea"
+      placeholder="Task description"
+      name="description"
+      rows="10"
+      required
+    >
+{{ task.description }}
+</textarea
+    >
+  </div>
+  <input name="user_id" value={{ session['id'] }} class="d-none" />
+  <div class="form-group text-right">
+    <button type="submit" class="btn btn-light">Edit Task</button>
+  </div>
+</form>
+
+{% endblock %}
