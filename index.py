@@ -15,6 +15,8 @@ app.permanent_session_lifetime = timedelta(minutes=10)
 
 db = SQLAlchemy(app)
 
+#### MODELS ####
+
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -67,6 +69,8 @@ def login_required(f):
             return redirect(url_for('login', next=request.url))
         return f(*args, **kwargs)
     return decorated_function
+
+#### URLS/VIEWS ####
 
 
 @app.route('/')
@@ -165,7 +169,7 @@ def edit_task(id):
     if request.method == "POST":
         task = Task.query.filter_by(id=id).first()
         task.title = request.form['title']
-        task.category = request.form['category']
+        task.category_id = request.form['category']
         task.description = request.form['description']
         db.session.commit()
         return redirect(url_for('task_manager'))
