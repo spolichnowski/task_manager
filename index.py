@@ -16,9 +16,10 @@ app.permanent_session_lifetime = timedelta(minutes=10)
 db = SQLAlchemy(app)
 
 #### MODELS ####
-
-
 class User(db.Model):
+    '''
+    User schema
+    '''
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(255))
@@ -43,6 +44,9 @@ def verify_password(password, password_hash):
 
 
 class Category(db.Model):
+    '''
+    Category schema
+    '''
     __tablename__ = 'categories'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
@@ -52,6 +56,7 @@ class Category(db.Model):
 
 
 class Task(db.Model):
+    'Task schema'
     __tablename__ = 'tasks'
     id = db.Column(db.Integer, primary_key=True)
     created = db.Column(db.DateTime, default=datetime.datetime.utcnow)
@@ -63,6 +68,10 @@ class Task(db.Model):
 
 
 def login_required(f):
+    '''
+    Function that wraps endpoints and requires
+    user to signed in.
+    '''
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'email' not in session:
@@ -70,16 +79,21 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+
 #### URLS/VIEWS ####
-
-
 @app.route('/')
 def index():
+    '''
+    Welcome page.
+    '''
     return render_template('welcome.html')
 
 
 @app.route('/register', methods=["POST", "GET"])
 def register():
+    '''
+    Creates a new account and redirects to login page.
+    '''
     if request.method == "POST":
         first_name = request.form['first_name']
         last_name = request.form['last_name']
@@ -96,7 +110,9 @@ def register():
 
 @app.route('/login', methods=["POST", "GET"])
 def login():
-    print(User.query.all())
+    '''
+    Logs in the user to his session
+    '''
     if request.method == "POST":
         user = User.query.filter_by(email=request.form['email']).first()
         if user:
@@ -122,6 +138,9 @@ def login():
 
 @app.route('/logout')
 def logout():
+    '''
+    Logs the user out of the session
+    '''
     session.pop("id", None)
     session.pop("first_name", None)
     session.pop("last_name", None)
@@ -132,7 +151,9 @@ def logout():
 @app.route('/task_manager', methods=['POST', 'GET'])
 @login_required
 def task_manager():
-    print(session)
+    '''
+    Task manager main page
+    '''
     if request.method == "POST":
         if 'title' in request.form:
             title = request.form['title']
@@ -149,7 +170,6 @@ def task_manager():
             new_category = Category(name=name, user_id=user_id)
             db.session.add(new_category)
             db.session.commit()
-
     stats = {}
     stats['created'] = len(Task.query.filter_by(user_id=session['id']).all())
     stats['done'] = len(Task.query.filter_by(
@@ -157,7 +177,6 @@ def task_manager():
 
     tasks = Task.query.filter_by(user_id=session['id']).all()
     categories = Category.query.filter_by(user_id=session['id']).all()
-
     date = datetime.date.today()
     date = date.strftime("%B %d, %Y")
     return render_template('task_manager.html', tasks=tasks, categories=categories, session=session, date=date, stats=stats)
@@ -166,6 +185,10 @@ def task_manager():
 @app.route('/edit_task/<int:id>', methods=['POST', 'GET'])
 @login_required
 def edit_task(id):
+    '''
+    Uses task id to fine task and prints form
+    where the user can edit it.
+    '''
     if request.method == "POST":
         task = Task.query.filter_by(id=id).first()
         task.title = request.form['title']
@@ -182,6 +205,9 @@ def edit_task(id):
 @app.route('/delete_task/<int:id>')
 @login_required
 def delete_task(id):
+    '''
+    Deletes task from the database
+    '''
     task = Task.query.filter_by(id=id).first()
     db.session.delete(task)
     db.session.commit()
@@ -196,7 +222,7 @@ def finish_task(id):
     db.session.commit()
     return redirect(url_for("task_manager"))
 
-
+# Runs if database has not been yet created
 db.create_all()
 
 if __name__ == '__main__':
