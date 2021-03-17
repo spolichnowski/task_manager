@@ -1,6 +1,6 @@
-Task Manager / Flask Application
+# Task Manager / Flask Application
 
-> # The aim of the project was to create simple task manager. It allowed me to improve my knowledge about Flask.
+> The aim of the project was to create simple task manager. It allowed me to improve my knowledge about Flask.
 
 ## Setup
 
